@@ -24,7 +24,8 @@ export const gateAuthenticated = (event: RequestEvent): boolean => {
   const cookies = parse(event.request.headers.get('cookie') || '');
   const signedIn = cookies['signedIn'] && cookies['signedIn'] === 'yes';
   if (! signedIn) {
-    throw redirect(307, '/sign-in')
+    const location = event.url.pathname;
+    throw redirect(307, `/sign-in?redirect=${location}`)
   }
   return true
 }
