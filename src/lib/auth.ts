@@ -1,31 +1,23 @@
 import { redirect, type RequestEvent } from '@sveltejs/kit';
-import { type CookieSerializeOptions, serialize, parse } from 'cookie';
+import type { CookieSerializeOptions } from 'cookie';
 
 const COOKIE_OPTS: CookieSerializeOptions = {
-	httpOnly: true
+	httpOnly: true,
+	path: '/'
 };
 export const login = (event: RequestEvent) => {
-	const { setHeaders } = event;
-	const cookie = serialize('signedIn', 'yes', COOKIE_OPTS);
-	setHeaders({
-		'set-cookie': cookie
-	});
+	event.cookies.set('signedIn', 'yes', COOKIE_OPTS);
 };
 
 export const logout = (event: RequestEvent) => {
-	const { setHeaders } = event;
-	const cookie = serialize('signedIn', '', { ...COOKIE_OPTS, maxAge: 0 });
-	setHeaders({
-		'set-cookie': cookie
-	});
+	event.cookies.delete('signedIn', COOKIE_OPTS);
 };
 
 export const gateAuthenticated = (event: RequestEvent): boolean => {
-  const cookies = parse(event.request.headers.get('cookie') || '');
-  const signedIn = cookies['signedIn'] && cookies['signedIn'] === 'yes';
-  if (! signedIn) {
-    const location = event.url.pathname;
-    throw redirect(307, `/sign-in?redirect=${location}`)
-  }
-  return true
-}
+	const signedIn = event.cookies.get('signedIn') === 'yes';
+	if (!signedIn) {
+		const location = event.url.pathname;
+		throw redirect(307, `/sign-in?redirect=${location}`);
+	}
+	return true;
+};
