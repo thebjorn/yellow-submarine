@@ -1,10 +1,11 @@
-<script lang="ts">
+<script>
 	import { page } from '$app/stores';
-	import type { PageData } from './$types';
-	export let data: PageData;
+	export let data;
+	
 	$: list = data.list;
 	$: signedIn = data.signedIn;
-	let pages: { label: string; href: string }[] = [];
+	let pages = [];
+
 	$: {
 		pages = [];
 		for (let p = 1; p <= list.numPages; p++) {

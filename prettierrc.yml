@@ -1,0 +1,43 @@
+# https://prettier.io/docs/en/options.html
+# yml so I can comment
+
+# use spaces for indentation
+useTabs: false
+tabWidth: 4
+
+# questionmark at end of line, if on a separate lane, : else  on third line.
+experimentalTernaries: true
+
+# that's right, 80 chars.
+printWidth: 80
+
+# use single quotes, except for html attributes (I think, not sure)
+singleQuote: true
+
+# only quote props in object literals when necessary
+quoteProps: as-needed
+
+# I believe this will leave it up to the developer..?
+trailingComma: es5
+
+# hmm... it seems to be the new normal...
+semi: false
+
+# use {foo: bar} instead of { foo: bar }
+bracketSpacing: false
+
+# don't leave lone > on its own line
+bracketSameLine: true
+
+# x => x, not (x) => x
+arrowParens: avoid
+
+# why is this still a thing..?
+endOfLine: lf
+
+plugins:
+    - prettier-plugin-svelte
+overrides:
+    - files: '*.svelte'
+      options:
+          parser: svelte
