@@ -1,8 +1,9 @@
 <script>
     import { page } from "$app/stores";
-    export let data;
-    $: signedIn = data.signedIn;
-    $: console.log('signedIn', signedIn);
+    let { data } = $props();
+    let signedIn = $derived(data.signedIn);
+    
+    $effect(() => console.log('signedIn', signedIn));
 </script>
 
 <header>

@@ -1,10 +1,10 @@
 <script>
-import { page } from "$app/stores";
+    import { page } from "$app/stores";
 
-
-  const redirect = $page.url.searchParams.get('redirect') || ''
+    const redirect = $page.url.searchParams.get("redirect") || "";
 </script>
+
 <form method="post">
-  <input name="redirect" value={redirect} type="hidden"/>
-  <button type="submit">Click Here to Sign In</button>
+    <input name="redirect" value={redirect} type="hidden" />
+    <button type="submit">Click Here to Sign In</button>
 </form>
