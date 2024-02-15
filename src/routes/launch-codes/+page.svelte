@@ -1,12 +1,13 @@
 <script>
     import { page } from "$app/stores";
-    export let data;
-    $: list = data.list;
-    $: signedIn = data.signedIn;
+    let { data } = $props();
+    let resultset = $derived(data.resultset);
+    let signedIn = $derived(data.signedIn);
     let pages = [];
-    $: {
+
+    $effect.pre(() => {
         pages = [];
-        for (let p = 1; p <= list.numPages; p++) {
+        for (let p = 1; p <= resultset.numPages; p++) {
             const href =
                 p === 1
                     ? $page.url.pathname
@@ -14,20 +15,23 @@
             pages.push({
                 href,
                 label: `Page ${p}`,
+                selected: p === resultset.page,
             });
         }
-    }
+    });
 </script>
 
-<h1>Launch Codes</h1>
+<h1>
+    Launch Codes
+    <!-- getting signedIn from page -->
+    <small>(signedin: {signedIn})</small>
+</h1>
 <p>
-    Page {list.page} of {list.numPages}. |
+    Page {resultset.page} of {resultset.numPages}. |
     {#each pages as p, i (p.href)}
-        <a href={p.href}>{p.label}</a>
+        <a href={p.href} class:selected={p.selected}>{p.label}</a>
         {" | "}
     {/each}
-
-    Signed In: {JSON.stringify(signedIn)}
 </p>
 
 <table style="width: 100%;">
@@ -38,7 +42,7 @@
         </tr>
     </thead>
     <tbody>
-        {#each list.records as rec (rec.id)}
+        {#each resultset.records as rec (rec.id)}
             <tr>
                 <td>
                     {rec.id}
@@ -50,3 +54,32 @@
         {/each}
     </tbody>
 </table>
+
+<style>
+    table {
+        margin-top: 1rem;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th,
+    td {
+        border: 1px solid #000;
+        padding: 0.5rem 1rem;
+    }
+    th {
+        text-align: left;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    th {
+        background-color: #4caf50;
+        color: white;
+    }
+    .selected {
+        font-weight: bold;
+    }
+</style>

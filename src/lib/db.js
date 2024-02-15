@@ -3,12 +3,15 @@
 export const getLaunchCodeListResult = (params) => {
     const rpp = 10;
     const numPages = Math.ceil(launchCodes.length / rpp);
+    
     let page = parseInt(params.get('page'));
     if (Number.isNaN(page)) {
         page = 1;
     }
     page = Math.max(1, Math.min(numPages, page));
+    
     const records = launchCodes.slice((page - 1) * rpp, page * rpp);
+
     return {
         page,
         numPages,
