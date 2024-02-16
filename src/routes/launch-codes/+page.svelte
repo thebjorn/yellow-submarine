@@ -4,8 +4,7 @@
     let resultset = $derived(data.resultset);
     let signedIn = $derived(data.signedIn);
     
-
-    const update_pages = resultset => {
+    let pages = $derived.by(() => {
         const pages = [];
         for (let p = 1; p <= resultset.numPages; p++) {
             const href =
@@ -19,8 +18,23 @@
             });
         }
         return pages;
-    };
-    let pages = $derived(update_pages(resultset));
+    });
+    // const update_pages = resultset => {
+    //     const pages = [];
+    //     for (let p = 1; p <= resultset.numPages; p++) {
+    //         const href =
+    //             p === 1
+    //                 ? $page.url.pathname
+    //                 : $page.url.pathname + `?page=${p}`;
+    //         pages.push({
+    //             href,
+    //             label: `Page ${p}`,
+    //             selected: p === resultset.page,
+    //         });
+    //     }
+    //     return pages;
+    // };
+    // let pages = $derived(update_pages(resultset));
 </script>
 
 <h1>
