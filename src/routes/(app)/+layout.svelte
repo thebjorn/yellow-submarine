@@ -12,6 +12,7 @@
     // console.log('/+layout.svelte data', data);
     // console.log('signedin', data.signedIn, typeof data.signedIn);
     let signedIn = $derived(data.signedIn);
+    let user = $derived(data.user);
 
     // console.log('$page.url', $page.url);
     // console.log('$page.url.pathname', $page?.url?.pathname);
@@ -25,8 +26,13 @@
 <header>
     <nav>
         <a href="/">home</a>
-        <span>Signed In: {JSON.stringify(signedIn)}</span>
+        <span>
+            Signed In: {user?.name} ({JSON.stringify(signedIn)})
+        
+        </span>
+
         <a disabled={signedIn} href="{LOGIN_URL}?next={LOGIN_REDIRECT_URL}">login</a>
+        
         <form method="post" action="{LOGOUT_URL}">
             <input name="next" value={LOGOUT_REDIRECT_URL} type="hidden">
             <button type="submit" disabled={!signedIn}>logout</button>
