@@ -21,6 +21,9 @@
 		return pages
 	});
 </script>
+<svelte:head>
+	<title>Launch Codes (Fixed)</title>
+</svelte:head>
 
 <h1>Launch Codes (Fixed)</h1>
 <p>
