@@ -5,16 +5,18 @@
         LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL 
     } from '$lib/auth';
 
-    let { data } = $props();
+    let { 
+        data 
+    } = $props();
 
-    console.log('/+layout.svelte data', data);
-    console.log('signedin', data.signedIn, typeof data.signedIn);
+    // console.log('/+layout.svelte data', data);
+    // console.log('signedin', data.signedIn, typeof data.signedIn);
     let signedIn = $derived(data.signedIn);
 
     // console.log('$page.url', $page.url);
-    console.log('$page.url.pathname', $page?.url?.pathname);
-    console.log('$page.route.id', $page.route?.id);
-    console.log('\n');
+    // console.log('$page.url.pathname', $page?.url?.pathname);
+    // console.log('$page.route.id', $page.route?.id);
+    // console.log('\n');
     // console.log('LOGIN_REDIRECT_URL', LOGIN_REDIRECT_URL);
     
     $effect(() => console.log('signedIn', signedIn));
@@ -29,7 +31,6 @@
             <input name="next" value={LOGOUT_REDIRECT_URL} type="hidden">
             <button type="submit" disabled={!signedIn}>logout</button>
         </form>
-        <a disabled={!signedIn} href="{LOGOUT_URL}?next={LOGOUT_REDIRECT_URL}">logout</a>
     </nav>
 </header>
 

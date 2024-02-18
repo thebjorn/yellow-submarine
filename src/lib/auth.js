@@ -13,7 +13,15 @@ const COOKIE_OPTS = {
     path: '/'
 };
 
-export const login = event => event.cookies.set(COOKIE_NAME, 'yes', COOKIE_OPTS);
+export const login = event => {
+    event.cookies.set(COOKIE_NAME, 'yes', COOKIE_OPTS);
+
+    // call the database to create a session (hmm.. server code?)
+    // ...
+
+    // notify the presence channel to say hello
+    // ...
+}
 
 export const isAuthenticated = event => event.cookies?.get(COOKIE_NAME) === 'yes';
 
@@ -27,7 +35,7 @@ export const logout = event => {
         // remove the cookie
         event.cookies.delete(COOKIE_NAME, COOKIE_OPTS);
 
-        // call the database to invalidate the session
+        // call the database to invalidate the session (hmm.. server code?)
         // ...
 
         // notify the presence channel to say goodbye
@@ -48,14 +56,14 @@ export const login_required = (event) => {
     const signedIn = isAuthenticated(event);
     if (!signedIn) {
         // find location of current page
-        const location = event.url.pathname;
+        const href = event.url.href;  // should probably be encoded..?
 
         // redirect to sign-in page with location as a query parameter 
         // (so we can redirect back after sign-in)
         //
         // HTTP 307 means "temporary redirect" and that the request method will not change
         // (e.g. POST will remain POST)
-        throw redirect(307, `/sign-in?next=${location}`);
+        throw redirect(307, `${LOGIN_URL}?next=${href}`);
     }
     return true;
 };
