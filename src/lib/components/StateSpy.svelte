@@ -5,6 +5,7 @@
         name = 'data',
         subkey = false,
         open = true,
+        value_open = true,
         depth = 0,
         child = false,
         path = ['root'],
@@ -12,8 +13,6 @@
     } = $props();
     // {JSON.stringify(data, null, 2)}
 
-
-    let collapsed = $state(false);
 
     // generic value to string
     const val2str = (val) => {
@@ -89,12 +88,27 @@
     }
 
     function toggle_section(e) {
+        // prevent width of root from changing when collapsing
         const root = document.querySelector('.state-spy.root');
         const current_width = root.offsetWidth;
         root.style.width = current_width + 'px';
-        const item = e.target.closest('.item')
-        const controls = item.dataset.controls
-        document.querySelectorAll(`[data-scope^="${controls}"]`).forEach(el => el.classList.toggle('closed'))
+
+        value_open = !value_open
+
+        // const item = e.target.closest('.item')
+        // const controls = item.dataset.controls
+        // const open = item.dataset.open === 'true'
+        // item.dataset.open = !open
+        // document.querySelectorAll(`[data-scope^="${controls}"]`).forEach(el => {
+        //     if (open) {
+        //         el.classList.add('closed')
+        //     } else {
+        //         el.classList.remove('closed')
+        //         if (el.dataset?.open === 'false') {
+        //             el.dataset.open = true
+        //         }
+        //     }
+        // })
     }
 
     const indent = 24;
@@ -102,53 +116,64 @@
 
 
 {#snippet key_snippet({depth, name, header, collapsible})}
-    <span class="key" class:object={header} style="padding-left:{(collapsible ? -3 : 16) + depth*indent}px">
+    <span class="key" class:object={header} style="padding-left:{(collapsible ? -7 : 7) + depth*indent}px">
         {#if collapsible}
-            <svg class="collapsed-close-icon" style="width:16px; height:16px;vertical-align:-2px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        {#if !value_open}
+            <svg class="collapsed-close-icon" style="margin-right:-5px;width:16px; height:16px;vertical-align:-2px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10 16 4-4-4-4"/>
             </svg>
-            <svg class="collapsed-open-icon" style="width:16px; height:16px;vertical-align:-2px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        {:else}
+            <svg class="collapsed-open-icon" style="margin-right:-5px;width:16px; height:16px;vertical-align:-2px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10 4 4 4-4"/>
             </svg>
+            {/if}
         {/if}
         
         {name}
     </span>
 {/snippet}
 
-{#snippet content()}
 
-    <div class="item collapsible" 
-         onclick={toggle_section}
-         data-controls="{path.join('/')}">
+
+{#snippet content()}
+<li class="snippet-content">
+    <div class="item collapsible" data-open={value_open}
+         onclick={toggle_section}>
         {@render key_snippet({depth, name, header: true, collapsible: true})}
         <div class="type">Object</div>
     </div>
+    <ol class="outside-each" class:closed={!value_open}>
+        {#if value_open}
     {#each Object.keys(strdata) as key}
+    
         {#if strdata[key][1] === 'Object'}
             <svelte:self 
                 data={data[key]} 
                 subkey 
                 name={key} 
+                value_open={value_open}
                 depth={depth+1} 
                 child={true}
                 path={[...path, key]}
                 counter={counter}
                 />
         {:else}
-
+            <li class="inside-each">
             <!-- the data (when value is a simple type): key, value, type -->
-            <div class="item" data-scope="{path.join('/')}">
+            <div class="item" data-scope="{path.join('/')}" hidden={!value_open}>
                 {@render key_snippet({depth: depth+1, name: key, header: false, collapsible: false})}
                 <!-- the type is added as a class in case we need special formatting -->
                 <span class="value {strdata[key][1].toLowerCase()}">
-                    {strdata[key][0]} (subkey-of: {path.join('/')})
+                    {strdata[key][0]} 
                 </span>
                 <span class="type">{strdata[key][1]}</span>
             </div>
+            </li>
         {/if}
     {/each}
-
+        {/if}
+    </ol>
+</li>
 {/snippet}
 
 {#if !child}
@@ -172,9 +197,11 @@
         {/if}
 
         <div class="state-spy-content">
+            <ol class="root">
             {#if open }
                 {@render content()}
             {/if}
+            </ol>
         </div>
     </div>    
 
@@ -194,6 +221,12 @@
         --border-color: #999;
 
         /* --debug: 4px dashed rgb(155, 155, 4); */
+
+        /* reset */
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+        font-weight: normal;
         
         overflow: auto;
         /* resize: both; */
@@ -219,8 +252,8 @@
         display: grid;
         grid-template-columns: 
             [key-start] 1fr [key-end value-start] 
-            auto [value-end type-start] 
-            auto [type-end];
+            minmax(50px, max-content) [value-end type-start] 
+            minmax(62px, max-content) [type-end];
         gap: 1px 20px;
     }
 
@@ -228,12 +261,13 @@
         padding-left: var(--indent);
     }
 
-    .root {
-
-
-        /* padding: 1rem 1rem 1rem 1.5rem; */
-        
+    ol {
+        list-style: none;
+        padding: 0;
+        margin: 0;
     }
+
+ 
     .root.closed {
         /* width: 1.5rem;
         height: 1.5rem; */
@@ -256,10 +290,6 @@
     }
     .closed .close-icon {
         transform: rotate(45deg);
-        display: none;
-    }
-
-    .collapsed-close-icon {
         display: none;
     }
 
@@ -323,23 +353,28 @@
         content: '◢';
     }
 
-
-
-    .item {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    .item, ol, li {
         display: grid;
         grid-template-columns: subgrid;
         grid-column: key-start / type-end;
+    }
+
+    ol.closed > li {
+        display: none;
+    }
+
+    .item.collapsible {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .item {
+        
+
         align-items: baseline;
         border-bottom: 1px dotted #ddd;
-        /* padding-left: 32px;
-        margin-left: -32px;
-        margin-right: -1rem;
-        padding-right: 1rem;
-        border-left: 1px solid #bbb; */
         background-color: aliceblue;
 
-        /* >* {outline: 1px solid green;} */
         &:hover {
             background-color: #f0f0f0;
         }
@@ -347,7 +382,6 @@
         .key {
             font-weight: 500;
             grid-column: key;
-            /* width: var(--key-width, 11rem) */
             color: #666;
         }
 
@@ -363,11 +397,10 @@
             text-align: left;
             font-family: monospace;
             color: rgb(51, 51, 233);
+            font-size: 0.9em;
         }
         .value.string, .value.array {
             hanging-punctuation: first last;
-            /* padding-left: 1em; */
-            /* text-indent: -10px each-line; */
         }
         .type {
             grid-column: type;
@@ -387,16 +420,5 @@
         font-weight: bold;
         color: #000;
     }
-
-    .item.object {
-        /* border: 4px dashed red; */
-
-        .key:before {
-            content: '>';
-        }
-
-    }
-
-
 
 </style>
