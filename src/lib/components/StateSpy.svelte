@@ -6,14 +6,14 @@
         subkey = false,
         open = true,
         depth = 0,
-        maxkey = 0,
-        maxval = 0,
-        maxdepth = 0,
+        child = false,
+        path = ['root'],
+        counter = 1
     } = $props();
     // {JSON.stringify(data, null, 2)}
 
 
-
+    let collapsed = $state(false);
 
     // generic value to string
     const val2str = (val) => {
@@ -32,12 +32,16 @@
 
     // object to string
     const obj2str = (val) => {
-        maxdepth += 1
+        // maxdepth += 1
         return Object.fromEntries(Object.entries(val).map(([k, v]) => stringify(k, v)));
     }
 
     const type2str = (val, typename) => {
         switch (typename) {
+            case 'null':
+                return 'null';
+            case 'undefined':
+                return 'undefined';
             case 'boolean':
                 return val2str(val);
             case 'number':
@@ -54,144 +58,209 @@
     }
 
     const val2type = (val) => {
+        if (val === null) return 'null';
+        if (val === undefined) return 'undefined';
         if (typeof val === 'boolean' || typeof val === 'number' || typeof val === 'string') return typeof val;
         if (val instanceof Date) return 'Date';
         if (Array.isArray(val)) return 'Array';
         if (typeof val === 'object') return 'Object';
     }
 
-
-
     function stringify(k, v) {
         const typename = val2type(v);
         const strval = type2str(v, typename);
-        maxkey = Math.max(maxkey, k.length);
-        maxval = Math.max(maxval, strval?.length ?? 0);
-        return [k, [strval, typename]]
+        return [k, [strval, typename, [...path, k]]]
     }
 
     // let strdata = $derived(Object.fromEntries(Object.entries(data).map(([k, v]) => [k, type2str(v)])));
     let strdata = $derived(Object.fromEntries(Object.entries(data).map(([k, v]) => stringify(k, v))));
 
-    console.log('maxkey', maxkey);
-    console.log('maxval', maxval);
-    console.log('maxdepth', maxdepth);
+    function toggle_state_spy(e) {
+        open = !open
+        const root = document.querySelector('.state-spy.root');
+        if (open) {
+            root.style.width = 'fit-content';
+            root.style.height = 'fit-content';
+        } else {
+            const size = '40px';
+            root.style.width = size;
+            root.style.height = size;
+        }
+    }
 
-/*
-        
-        {#each Object.keys(data) as key}
-            {#if typeof data[key] === 'boolean' || typeof data[key] === 'number' || typeof data[key] === 'string'}
-                <div class="item">
-                    <span class="key">{key}</span>
-                    <span class="value" class:string={typeof data[key] === 'string'}>{JSON.stringify(data[key])}</span>
-                    <span class="type">{typeof data[key]}</span>
-                </div>
-            {:else if data[key] instanceof Date}
-                <div class="item">
-                    <span class="key">{key}</span>
-                    <span class="value" class:string={typeof data[key] === 'string'}>
-                        {data[key].toLocaleString()}
-                        <!-- {JSON.stringify(data[key])} -->
-                    </span>
-                    <span class="type">Date</span>
-                </div>
-            {:else if Array.isArray(data[key])}
-                <div class="item">
-                    <span class="key">{key}</span>
-                    <span class="value" class:string={typeof data[key] === 'string'}>
-                        {data[key].toString()}
-                    </span>
-                    <span class="type">Array</span>
-                </div>
-            {:else if typeof data[key] === 'object'}
-                <svelte:self data={data[key]} subkey name={key} depth={depth+1} />
-            {:else}
-                <div class="item">
-                    <span class="key">{key}</span>
-                    <span class="value">{JSON.stringify(data[key])}</span>
-                    <span class="type">{typeof data[key]}</span>
-                </div>
-            {/if}
-        {/each}
+    function toggle_section(e) {
+        const root = document.querySelector('.state-spy.root');
+        const current_width = root.offsetWidth;
+        root.style.width = current_width + 'px';
+        const item = e.target.closest('.item')
+        const controls = item.dataset.controls
+        document.querySelectorAll(`[data-scope^="${controls}"]`).forEach(el => el.classList.toggle('closed'))
+    }
 
-*/
+    const indent = 24;
 </script>
 
 
-<div class="state-spy" class:root={!subkey} class:subkey data-depth={depth} class:closed={!open}>
-    {#if depth === 0}
-        <button on:click={() => open = !open}>
-              <svg class="close-icon"  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-              </svg>
-        </button>
-    {/if}
-
-    {#if open }
-    <div class="content" transition:slide>
+{#snippet key_snippet({depth, name, header, collapsible})}
+    <span class="key" class:object={header} style="padding-left:{(collapsible ? -3 : 16) + depth*indent}px">
+        {#if collapsible}
+            <svg class="collapsed-close-icon" style="width:16px; height:16px;vertical-align:-2px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10 16 4-4-4-4"/>
+            </svg>
+            <svg class="collapsed-open-icon" style="width:16px; height:16px;vertical-align:-2px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10 4 4 4-4"/>
+            </svg>
+        {/if}
         
-        <h3>{name}</h3>
-        {#each Object.keys(strdata) as key}
-            {#if strdata[key][1] === 'Object'}
-                <svelte:self 
-                    data={data[key]} 
-                    subkey 
-                    name={key} 
-                    depth={depth+1} 
-                    maxkey={maxkey}
-                    maxval={maxval}
-                    maxdepth={maxdepth}
-                    />
-            {:else}
-                <div class="item">
-                    <span class="key" style="width:{3+maxkey-depth}rem">{key}</span>
-                    <span class="value {strdata[key][1].toLowerCase()}"
-                          style="{maxval}ex">
-                        {strdata[key][0]}
-                    </span>
-                    <span class="type">{strdata[key][1]}</span>
-                </div>
-            {/if}
-        {/each}
+        {name}
+    </span>
+{/snippet}
 
+{#snippet content()}
 
-
-        
+    <div class="item collapsible" 
+         onclick={toggle_section}
+         data-controls="{path.join('/')}">
+        {@render key_snippet({depth, name, header: true, collapsible: true})}
+        <div class="type">Object</div>
     </div>
+    {#each Object.keys(strdata) as key}
+        {#if strdata[key][1] === 'Object'}
+            <svelte:self 
+                data={data[key]} 
+                subkey 
+                name={key} 
+                depth={depth+1} 
+                child={true}
+                path={[...path, key]}
+                counter={counter}
+                />
+        {:else}
+
+            <!-- the data (when value is a simple type): key, value, type -->
+            <div class="item" data-scope="{path.join('/')}">
+                {@render key_snippet({depth: depth+1, name: key, header: false, collapsible: false})}
+                <!-- the type is added as a class in case we need special formatting -->
+                <span class="value {strdata[key][1].toLowerCase()}">
+                    {strdata[key][0]} (subkey-of: {path.join('/')})
+                </span>
+                <span class="type">{strdata[key][1]}</span>
+            </div>
+        {/if}
+    {/each}
+
+{/snippet}
+
+{#if !child}
+
+    <div class="state-spy" 
+        class:root={!subkey} 
+        class:subkey data-depth={depth} 
+        class:closed={!open}>
+
+        <!-- toggle button -->
+        {#if depth === 0}
+            <button on:click={toggle_state_spy}>
+                <svg class="eye-icon" hidden={!open} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-width="1.6" d="M21 12c0 1.2-4 6-9 6s-9-4.8-9-6c0-1.2 4-6 9-6s9 4.8 9 6Z"/>
+                    <path stroke="currentColor" stroke-width="1.6" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                </svg>
+                <svg class="close-icon"  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+            </button>
+        {/if}
+
+        <div class="state-spy-content">
+            {#if open }
+                {@render content()}
+            {/if}
+        </div>
+    </div>    
+
+{:else}
+    {#if open }
+        {@render content()}
     {/if}
-    <!-- <pre>{JSON.stringify(data, null, 2)}</pre> -->
-</div>
+{/if}
+
 
 
 <style lang="postcss">
     .state-spy {
-        --indent: 1.5rem;
-    }
+        --indent: 1.5rem;  /* the tree indentation */
+        --background-color: #fefefe;
+        /* --background-color: #dba3a3; */
+        --border-color: #999;
 
-    .root {
-        background-color: #fefefe;
-        transition: background-color 0.2s;
-        padding: 1em;
-        border-radius: 5px;
-        border: 1px solid #999;
+        /* --debug: 4px dashed rgb(155, 155, 4); */
+        
+        overflow: auto;
+        /* resize: both; */
+        width: fit-content;
         position: fixed;
         top: 1rem;
         right: 1rem;
         z-index: 1000;
         max-height: 80vh;
-        overflow: auto;
-        max-width: 30vw;
+        
+        padding: 30px 10px 10px;
+        
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        
+        transition: background-color 0.2s;
+        background-color: var(--background-color);
+
     }
 
-    .close-icon {
+    .state-spy-content {
+        outline: var(--debug);
+        display: grid;
+        grid-template-columns: 
+            [key-start] 1fr [key-end value-start] 
+            auto [value-end type-start] 
+            auto [type-end];
+        gap: 1px 20px;
+    }
+
+    .subkey {
+        padding-left: var(--indent);
+    }
+
+    .root {
+
+
+        /* padding: 1rem 1rem 1rem 1.5rem; */
+        
+    }
+    .root.closed {
+        /* width: 1.5rem;
+        height: 1.5rem; */
+        resize: none;
+    }
+
+    .close-icon, .eye-icon {
         --size: 22px;
         width: var(--size);
         height: var(--size);
         stroke: currentColor;
         transition: transform 0.3s;
     }
+    .eye-icon {
+        --size: 22px;
+        display: none;
+    }
+    .closed .eye-icon {
+        display: block;
+    }
     .closed .close-icon {
         transform: rotate(45deg);
+        display: none;
+    }
+
+    .collapsed-close-icon {
+        display: none;
     }
 
     button {
@@ -226,21 +295,25 @@
         margin-bottom: 0;
         text-indent: calc(-1 * var(--indent));
         font-weight: 600;
+        margin-left: -9px;
+
+        &:before {
+            content: '';
+            border: 5px solid transparent;
+            vertical-align: middle;
+            border-top-color: #666;
+            display: inline-block;
+            transform: translateX(-4px) translateY(2px);
+            transition: transform 0.159s;
+            cursor: pointer;
+        }
     }
-    h3:before {
+
+    h3.collapsed:before {
         content: '';
-        border: 5px solid transparent;
-        vertical-align: middle;
-        border-left-color: #666;
-        /* color: #666; */
-        /* font-size: 14px; */
-        /* margin-right: 0.5rem; */
-        /* width: var(--size); */
-        /* height: var(--size); */
-        /* margin-left: var(--size); */
-        /* margin-right: calc(-1 * var(--size)); */
-        display: inline-block;
-        /* float: left; */
+        transform: rotate(-90deg) ;
+        /* border-color: transparent;
+        border-top-color: #666; */
     }
     [data-depth="0"] > .content > h3 {
         text-indent: 0;
@@ -250,26 +323,43 @@
         content: '◢';
     }
 
+
+
     .item {
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        width: 100%;
         display: grid;
-        /* grid-template-columns: auto 5rem 3.5rem; */
-        grid-template-columns: auto 1fr 3.5rem;
+        grid-template-columns: subgrid;
+        grid-column: key-start / type-end;
         align-items: baseline;
-        /* border-bottom: 1px solid #ddd; */
-        padding-left: 24px;
-        margin-left: -24px;
-        border-left: 1px solid #ddd;
+        border-bottom: 1px dotted #ddd;
+        /* padding-left: 32px;
+        margin-left: -32px;
+        margin-right: -1rem;
+        padding-right: 1rem;
+        border-left: 1px solid #bbb; */
+        background-color: aliceblue;
 
         /* >* {outline: 1px solid green;} */
+        &:hover {
+            background-color: #f0f0f0;
+        }
 
         .key {
             font-weight: 500;
+            grid-column: key;
             /* width: var(--key-width, 11rem) */
-
+            color: #666;
         }
+
+
+        .object {
+            grid-column: key-start / value-end;
+            font-weight: bold;
+            color: #000;
+        }
+        
         .value {
+            grid-column: value;
             text-align: left;
             font-family: monospace;
             color: rgb(51, 51, 233);
@@ -277,19 +367,26 @@
         .value.string, .value.array {
             hanging-punctuation: first last;
             /* padding-left: 1em; */
-            text-indent: -10px each-line;
+            /* text-indent: -10px each-line; */
         }
         .type {
+            grid-column: type;
             text-align: right;
             color: #666;
             font-size: 0.8em;
             font-style: italic;
         }
     }
-    .item:hover {
-        background-color: #f0f0f0;
+
+    .item.closed {
+        display: none;
     }
-    
+
+    .object {
+        grid-column: key-start / value-end;
+        font-weight: bold;
+        color: #000;
+    }
 
     .item.object {
         /* border: 4px dashed red; */
@@ -302,10 +399,4 @@
 
 
 
-    .state-spy {
-
-    }
-    .subkey {
-        padding-left: var(--indent);
-    }
 </style>

@@ -31,7 +31,10 @@
 
 <pre>{JSON.stringify(data, null, 2)}</pre>
 
-<StateSpy data={q} />
+<pre>{JSON.stringify(q, null, 2)}</pre>
+
+<StateSpy data={data} />
+<!-- <StateSpy data={[q, data]} /> -->
 
 <p> <a href="/secret-launch-codes">View Launch Codes</a></p>
 
