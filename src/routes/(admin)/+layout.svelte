@@ -1,27 +1,10 @@
 <script>
-    import { page } from "$app/stores";
-    import { 
-        LOGIN_URL, LOGOUT_URL,
-        LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL 
-    } from '$lib/auth';
-
-    let { 
-        data 
-    } = $props();
-
-    // console.log('/+layout.svelte data', data);
-    // console.log('signedin', data.signedIn, typeof data.signedIn);
-    let signedIn = $derived(data.signedIn);
-    let user = $derived(data.user);
-
-    // console.log('$page.url', $page.url);
-    // console.log('$page.url.pathname', $page?.url?.pathname);
-    // console.log('$page.route.id', $page.route?.id);
-    // console.log('\n');
-    // console.log('LOGIN_REDIRECT_URL', LOGIN_REDIRECT_URL);
-    
-    $effect(() => console.log('signedIn', signedIn));
+    import { LOGIN_URL, LOGOUT_URL, LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL } from '$lib/auth.js';
+    let { data } = $props();
+    let user = data?.user;
+    let signedIn = user?.signedIn;
 </script>
+
 
 <header>
     <nav>
@@ -42,12 +25,14 @@
     </nav>
 </header>
 
-<slot/>
+
+<slot />
+
 
 <style>
     :global(html, body) {
-        background-color: white;
-        color: #000;
+        background-color: black;
+        color: white;
         min-height: 100%;
         height: 100%;
     }
@@ -57,6 +42,10 @@
         color: #999;
     }
 
+    a {
+        color: white;
+    }   
+
     header>nav {
         display: flex;
         gap: 1rem;
@@ -64,7 +53,21 @@
     }
 
     header>nav>* {
-        border: 1px solid #000;
+        border: 1px solid #a7a4a4;
         padding: 0.5rem 1rem;
+    }
+
+    button {
+        background-color: black;
+        color: white !important;
+        text-decoration: underline !important;
+        border: none;
+        padding: 0;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
     }
 </style>

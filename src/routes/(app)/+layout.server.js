@@ -10,11 +10,11 @@ export const load = (event) => {
 
     if (signedIn) {
         console.log("Fetch user data from db (should print in terminal)...")
-        user = { name: 'John Doe' };
+        // user = { name: 'John Doe' };
     }
     
     return { 
         signedIn,
-        user
+        // user
     };
 };

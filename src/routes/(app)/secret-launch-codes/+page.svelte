@@ -26,6 +26,9 @@
 </svelte:head>
 
 <h1>Launch Codes (Fixed)</h1>
+<pre>
+	{JSON.stringify(data, null, 2)}
+</pre>
 <p>
 	Page {resultset.page} of {resultset.numPages}.
 

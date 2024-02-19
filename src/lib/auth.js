@@ -2,7 +2,7 @@
 import { redirect } from '@sveltejs/kit';
 
 export const LOGOUT_REDIRECT_URL = '/goodbye';
-export const LOGIN_REDIRECT_URL = '/launch-codes-fixed';
+export const LOGIN_REDIRECT_URL = '/secret-launch-codes';
 export const LOGIN_URL = '/login';
 export const LOGOUT_URL = '/logout';
 
@@ -15,6 +15,10 @@ const COOKIE_OPTS = {
 
 export const isAuthenticated = event => {
     return event.cookies?.get(COOKIE_NAME) === 'yes';
+}
+
+export const get_sessionid = event => {
+    return event.cookies?.get(COOKIE_NAME);
 }
 
 
@@ -61,7 +65,7 @@ export const logout = async event => {
 
 export const login_required = (event) => {
     // runs on the server
-    console.log("LOGIN_REQUIRED:", event.request.method)
+    console.log("LOGIN_REQUIRED:", event.request.method, event.locals)
     if (isAuthenticated(event)) return {};
 
     // find location of current page

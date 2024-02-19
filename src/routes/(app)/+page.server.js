@@ -1,6 +1,3 @@
-import { login } from '$lib/auth'
-
-export const actions = { default: login }
 
 
 export const load = (event) => {
