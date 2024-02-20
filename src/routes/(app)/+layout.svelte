@@ -4,6 +4,7 @@
         LOGIN_URL, LOGOUT_URL,
         LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL 
     } from '$lib/auth';
+    import StateSpy from "$lib/components/StateSpy.svelte";
 
     let { 
         data 
@@ -22,6 +23,9 @@
     
     $effect(() => console.log('signedIn', signedIn));
 </script>
+
+
+
 
 <header>
     <nav>

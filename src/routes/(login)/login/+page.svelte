@@ -1,6 +1,7 @@
 <script>
     import { page } from "$app/stores";
     import { LOGIN_REDIRECT_URL } from '$lib/auth';
+    import StateSpy from "../../../lib/components/StateSpy.svelte";
 
     let {data} = $props();
     const next = $page.url.searchParams.get("next") || LOGIN_REDIRECT_URL;
@@ -8,7 +9,7 @@
 
 <h1>Sign In</h1>
 
-<pre>{JSON.stringify(data, null, 2)}</pre>
+<StateSpy data={data} />
 
 <form method="post">
     <input name="next" value={next} type="hidden">

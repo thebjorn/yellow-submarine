@@ -142,7 +142,7 @@
                 {@render key_snippet({depth: depth+1, name: key, header: false, collapsible: false})}
                 <!-- the type is added as a class in case we need special formatting -->
                 <span class="value {strdata[key][1].toLowerCase()}">
-                    {strdata[key][0]} (subkey-of: {path.join('/')})
+                    {strdata[key][0]}
                 </span>
                 <span class="type">{strdata[key][1]}</span>
             </div>

@@ -15,6 +15,7 @@ export const load = (event) => {
     
     return { 
         signedIn,
-        // user
+        foo: "bar",
+        locals: event.locals
     };
 };

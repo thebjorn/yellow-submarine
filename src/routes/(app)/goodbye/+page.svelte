@@ -1,8 +1,11 @@
 <script>
+    import StateSpy from "../../../lib/components/StateSpy.svelte";
+
     let { 
         data 
     } = $props();
 </script>
-<h1>Goodbye for now...</h1>
 
-<pre>{JSON.stringify(data, null, 2)} </pre>
+<StateSpy data={data} />
+
+<h1>Goodbye for now...</h1>

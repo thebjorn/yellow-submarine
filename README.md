@@ -44,6 +44,8 @@ Most things are unproblematic when the user takes the happy path, i.e. clicks on
 
 `+layout.server.js` files are meant for caching, not for authentication. In particular this means that data you've put into the layout will stay around after the user logs out.
 
+NOTE: this also applies to data in `event.locals` - it will contain stale data if the user logs out in a different window.
+
 If you want login information to be displayed in the "app shell", e.g. the user's name, then you need to have separate layout groups for the login and the app shell.
 
 Otherwise the user information will still be displayed (on the login page) if the user logs out in a different window (or removes the cookie in devtools).
@@ -77,3 +79,10 @@ If there is no other load code it can be shortened to:
 ```javascript
 export const load = login_required;
 ```
+
+## event.locals
+
+You only need to set the login information once in the root `+layout.server.js` file. This is because the `event.locals` object is passed down to all child routes.
+
+This caching is safe as long as you don't display any of it in the UI without first doing a `login_required` 
+call in the `load` function of the route. Every route. No exceptions.

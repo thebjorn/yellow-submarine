@@ -1,5 +1,6 @@
 <script>
 	import { page } from '$app/stores';
+    import StateSpy from '../../../lib/components/StateSpy.svelte';
 	
 	let {
 		data
@@ -25,10 +26,10 @@
 	<title>Launch Codes (Fixed)</title>
 </svelte:head>
 
+<StateSpy data={data} />
+
 <h1>Launch Codes (Fixed)</h1>
-<pre>
-	{JSON.stringify(data, null, 2)}
-</pre>
+
 <p>
 	Page {resultset.page} of {resultset.numPages}.
 
