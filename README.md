@@ -10,30 +10,45 @@ Svelte/SvelteKit does not have a very well-developed story when it comes to auth
 
 ## Structure of the code
 
-The code is structured as follows:
+The code is structured as follows (note the layout groups do not create new namespaces, i.e.
+`(login)/login/page.svelte` will be served at `/login` and not `/login/login`):
 
 ```console
 src\routes
-|   (app)                           # layout group 
-|   |-- +layout.server.js           # login status code
+|   (admin)                         # layout group 
+|   |-- +layout.svelte              # admin app shell
+|   `-- dashboard                   # protected page
+|       |-- +page.server.js
+|       |-- +page.svelte
+|       `-- dashboard-subpage       # protected subpage
+|           |-- +page.server.js
+|           `-- +page.svelte
+|-- (app)                           # layout group 
 |   |-- +layout.svelte              # app shell
 |   |-- +page.svelte                # home page
-    |-- goodbye                     # redirect after logout page
-    |   `-- +page.svelte            
-|   `-- launch-codes-fixed          # protected page
+|   |-- goodbye                     # redirect after logout page
+|   |   |-- +page.server.js
+|   |   `-- +page.svelte
+|   `-- secret-launch-codes         # protected page
 |       |-- +page.server.js
 |       `-- +page.svelte
-`-- (login)
-    |-- login
-    |   |-- +page.server.js
-    |   `-- +page.svelte
-    `-- logout
-        |-- +page.server.js
-        `-- +page.svelte
+|-- (login)                         # layout group 
+|   |-- login
+|   |   |-- +page.server.js
+|   |   `-- +page.svelte
+|   `-- logout
+|       |-- +page.server.js
+|       `-- +page.svelte
+|-- +layout.server.js               # expose event.locals and other auth status values
+`-- +layout.svelte                  # mostly empty
 ```
 
 ### references
 **Layout group**: https://kit.svelte.dev/docs/advanced-routing#advanced-layouts
+
+> By default, the layout hierarchy mirrors the route hierarchy. In some cases, that might not be what you want.
+>
+> Perhaps you have some routes that are 'app' routes that should have one layout (e.g. /dashboard or /item), and others that are 'marketing' routes that should have a different layout (/about or /testimonials). We can group these routes with a directory whose name is wrapped in parentheses — unlike normal directories, (app) and (marketing) do not affect the URL pathname of the routes inside them:
 
 
 # Notes...
