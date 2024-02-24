@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/stores';
-    import StateSpy from '../../../lib/components/StateSpy.svelte';
+    import StateSpy from 'state-spy'
 	
 	let {
 		data

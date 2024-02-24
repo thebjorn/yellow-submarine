@@ -5,7 +5,6 @@ export const LOGOUT_REDIRECT_URL = '/goodbye';
 export const LOGIN_REDIRECT_URL = '/secret-launch-codes';
 export const LOGIN_URL = '/login';
 export const LOGOUT_URL = '/logout';
-
 export const COOKIE_NAME = 'signedIn';
 
 const COOKIE_OPTS = {

@@ -2,7 +2,7 @@
     import { LOGIN_URL, LOGOUT_URL, LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL } from '$lib/auth.js';
     let { data } = $props();
     let user = data?.user;
-    let signedIn = user?.signedIn;
+    // let signedIn = user?.signedIn;
 </script>
 
 
@@ -13,7 +13,7 @@
 
         <a href="/dashboard">dashboard</a>
         <a href="/dashboard/dashboard-subpage">dashboard / subpage</a>
-        <span>
+        <!-- <span>
             Signed In: {user?.name} ({JSON.stringify(signedIn)})
         </span>
 
@@ -22,7 +22,7 @@
         <form method="post" action="{LOGOUT_URL}">
             <input name="next" value={LOGOUT_REDIRECT_URL} type="hidden">
             <button type="submit" disabled={!signedIn}>logout</button>
-        </form>
+        </form> -->
     </nav>
 </header>
 

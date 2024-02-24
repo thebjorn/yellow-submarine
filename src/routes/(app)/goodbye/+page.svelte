@@ -1,5 +1,5 @@
 <script>
-    import StateSpy from "../../../lib/components/StateSpy.svelte";
+    import StateSpy from 'state-spy'
 
     let { 
         data 

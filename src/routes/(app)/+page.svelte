@@ -1,11 +1,12 @@
 <script>
-    import Button from "$lib/components/ui/button/button.svelte";
-    import StateSpy from "$lib/components/StateSpy.svelte";
-    import LoginButton from "$lib/components/auth/login-button.svelte";
+    // import Button from "$lib/components/ui/button/button.svelte";
+    import StateSpy from 'state-spy';
+    // import LoginButton from "$lib/components/auth/login-button.svelte";
 
     let { 
         data 
     } = $props();
+    data.foo = '422'
 </script>
 
 <svelte:head>
@@ -16,8 +17,8 @@
 
 <StateSpy data={data} />
 
-<p> <a href="/secret-launch-codes">View Launch Codes</a></p>
+<p style="margin:2rem;"> <a href="/secret-launch-codes">View Launch Codes</a></p>
 
-<LoginButton mode="modal" asChild>
+<!-- <LoginButton mode="modal" asChild>
     <Button>Log In</Button>
-</LoginButton>
+</LoginButton> -->

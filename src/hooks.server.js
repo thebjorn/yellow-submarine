@@ -1,4 +1,5 @@
-import { get_sessionid } from '$lib/auth.js';
+// import { get_sessionid } from '$lib/auth.js';
+import { handle } from '$lib/server/auth.js';
 
 // Svelte error handler
 function handleError({error, event, status, message, stack, context, errorInfo, component}) {
@@ -19,17 +20,17 @@ function handleError({error, event, status, message, stack, context, errorInfo, 
     };
 }
 
-async function handle({event, resolve}) {
-    console.log('await resolve(event)')
-    const sessionid = get_sessionid(event)
-    event.locals.logged_in = !!sessionid;
-    event.locals.sessionid_value = sessionid ?? null;
-    event.locals.ran_hooks_server_js = true;
+// async function handle({event, resolve}) {
+//     console.log('await resolve(event)')
+//     const sessionid = get_sessionid(event)
+//     event.locals.logged_in = !!sessionid;
+//     event.locals.sessionid_value = sessionid ?? null;
+//     event.locals.ran_hooks_server_js = true;
 
-    const response = await resolve(event);
+//     const response = await resolve(event);
     
-    console.log('after await resolve(event)\n')
-    return response;
-}
+//     console.log('after await resolve(event)\n')
+//     return response;
+// }
 
 export { handleError, handle };

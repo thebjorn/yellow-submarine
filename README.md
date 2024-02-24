@@ -101,3 +101,10 @@ You only need to set the login information once in the root `+layout.server.js` 
 
 This caching is safe as long as you don't display any of it in the UI without first doing a `login_required` 
 call in the `load` function of the route. Every route. No exceptions.
+
+
+# Auth.js
+
+Differences from docs:
+
+1. src/auth.js -> src/lib/server/auth.js (can't go in src/lib/auth.js because it's a server file)
