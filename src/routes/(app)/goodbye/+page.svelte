@@ -1,11 +1,15 @@
 <script>
-    import StateSpy from 'state-spy'
+    import StateSpy from "state-spy";
 
-    let { 
-        data 
-    } = $props();
+    let { data } = $props();
 </script>
 
-<StateSpy data={data} />
+<svelte:body class="pico" />
 
-<h1>Goodbye for now...</h1>
+
+<main>
+    <StateSpy position="bottom-right" {data} />
+
+    <h1>Goodbye for now...</h1>
+</main>
+

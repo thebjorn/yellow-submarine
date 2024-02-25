@@ -19,28 +19,34 @@
 
 <h1>Welcome to the Submarine</h1>
 
-<StateSpy {data} />
+<StateSpy position="bottom-right" data={data} />
 
 <p style="margin:2rem;">
     <a href="/secret-launch-codes">View Launch Codes</a>
 </p>
 
 
-<div class="centered">
+<div class="centered pico" role="group">
     {#if data.session}
-        {#if data.session.user?.image}
-            <span
-                style="background-image: url('{data.session.user.image}')"
-                class="avatar"
-            ></span>
-        {/if}
-        <span class="signedInText">
-            <small>Signed in as</small><br />
-            <strong>{data.session.user?.name ?? "User"}</strong>
-        </span>
-        <Logout class="logout" logout-redirect-url="/goodbye">
-            Logg ut
-        </Logout>
+
+        <article class="logged-in">
+            <header>
+
+                {#if data.session.user?.image}
+                    <span
+                        style="background-image: url('{data.session.user.image}')"
+                        class="avatar"
+                    ></span>
+                {/if}
+                <div class="signedInText">
+                    <small style="font-style:italic">Signed in as</small><br />
+                    <strong>{data.session.user?.name ?? "User"}</strong>
+                </div>
+            </header>
+            <Logout class="logout" logout-redirect-url="/goodbye">
+                Logg ut
+            </Logout>
+        </article>
     {:else}
         <span class="notSignedInText">You are not signed in</span>
         <!-- <SignIn provider="github"/> -->
@@ -55,10 +61,16 @@
         padding: 0.5rem 1rem;
     }
 
+    header {
+        display: flex;
+        align-items: center;
+        gap: .3rem;
+    }
+
     .centered {
-        border: 1px solid #000;
-        padding: 1rem;
-        margin: 1rem auto;
+        /* border: 1px solid #000;
+        padding: 1rem;*/
+        margin: 1rem auto; 
         width: fit-content;
         /* display: flex;
         flex-direction: column;
@@ -67,13 +79,13 @@
         gap: 1rem; */
     }
 
-    .logout {
+    /* .logout {
         background-color: red !important;
-    }
+    } */
 
     .avatar {
-        width: 2rem;
-        height: 2rem;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         display: inline-block;
         background-size: cover;
@@ -81,11 +93,11 @@
         margin-right: 0.5rem;
     }
 
-    .signedInText {
+    /* .signedInText {
         display: inline-block;
         vertical-align: top;
         margin-right: 1rem;
-    }
+    } */
 
     .notSignedInText {
         display: inline-block;

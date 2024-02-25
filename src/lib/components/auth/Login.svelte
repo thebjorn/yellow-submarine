@@ -28,7 +28,7 @@
     method="POST"
     action={`/${signInPage}`}
     use:enhance
-    class={`signInButton ${className}`}
+    class={`pico signInButton ${className}`}
     {...rest}
 >
     <input type="hidden" name="providerId" value={provider} />
@@ -90,41 +90,35 @@
 </form>
 
 <style>
-    form {
+    /* form {
         width: 248px;
         margin-block: 4px;
     }
+    */
+    
     button {
-        height: 50px;
+        /* height: 50px;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         font-weight: 600;
-        font-size: 15px;
+        font-size: 15px; */
         
         display: grid;
         grid-template-columns: 30px 1fr;
-        gap: 10px;
+        /* background-color: white; */
+        /*gap: 10px;
         align-items: center;
         justify-content: start;
 
-        background-color: white;
         border: 1px solid #111;
         border-radius: 5px;
-        padding-inline: 15px;
+        padding-inline: 15px; */
     }
-
+/*
     .button-text {
         text-align: left;
     }
 
-    .provider-icon-box {
-        /* outline: 1px solid rebeccapurple; */
-        /* padding: 4px; */
-        /* display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        margin: 15px; */
-    }
+
 
     .provider-icon {
         width: 30px;
@@ -133,5 +127,5 @@
 
     .provider-icon.facebook {
         color: #0866FF;
-    }
+    } */
 </style>
