@@ -4,6 +4,7 @@
 
     let {
         class: className,
+		style: inlineStyles,
         variant = "default",
         size = "default",
         builders = [],
@@ -22,17 +23,29 @@
     // class={buttonVariants({ variant, size, className })}
 </script>
 
-<ButtonPrimitive.Root
-    class="btn btn-default btn-size-default"
-    {builders}
+<button
+    class={className}
+    style={inlineStyles}
     type="button"
-    {...restProps}
->
+    {...restProps}>
     <slot />
-</ButtonPrimitive.Root>
+</button>
 
 <style lang="scss">
 	$foo: 45px;
+
+	:global(.btn-primary) {
+		background-color: var(--indigo-4);
+		color: white;
+		text-shadow: none;
+		border-width: var(--border-size-1);
+
+		&:hover {
+			outline: 1px solid var(--indigo-5);
+			outline-offset: 2px;
+		}
+	}
+
 /*	
     :global(.btn) {
         display: inline-flex;
