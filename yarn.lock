@@ -133,9 +133,9 @@
     "@csstools/css-tokenizer" "^2.2.3"
 
 "@csstools/postcss-gradients-interpolation-method@^4.0.10":
-  version "4.0.10"
-  resolved "https://registry.yarnpkg.com/@csstools/postcss-gradients-interpolation-method/-/postcss-gradients-interpolation-method-4.0.10.tgz#0228a9a2c652c1976358f9731bea0ea4de4bf979"
-  integrity sha512-PwKOxVuX8lo52bPtPeKjaIp6oH2EzhcBxCndRcvGZKsqZYQ35k9A5G4yihZ+wp7PoxPqDNiXuhQsvQG2lqMpOA==
+  version "4.0.11"
+  resolved "https://registry.yarnpkg.com/@csstools/postcss-gradients-interpolation-method/-/postcss-gradients-interpolation-method-4.0.11.tgz#4e6cf5d6917672058d532d963c709e3776b9ab36"
+  integrity sha512-LFom5jCVUfzF+iuiOZvhvX7RRN8vc+tKpcKo9s4keEBAU2mPwV5/Fgz5iylEfXP/DZbEdq2C0At20urMi/lupw==
   dependencies:
     "@csstools/css-color-parser" "^1.5.2"
     "@csstools/css-parser-algorithms" "^2.6.0"
@@ -853,9 +853,9 @@ css-prefers-color-scheme@^9.0.1:
   integrity sha512-iFit06ochwCKPRiWagbTa1OAWCvWWVdEnIFd8BaRrgO8YrrNh4RAWUQTFcYX5tdFZgFl1DJ3iiULchZyEbnF4g==
 
 cssdb@^7.11.0:
-  version "7.11.0"
-  resolved "https://registry.yarnpkg.com/cssdb/-/cssdb-7.11.0.tgz#26570bbc92251b719cd74468df710d86c554117f"
-  integrity sha512-YUVAJhjDcTZzVD5XE49l3PQtGE29vvhzaL1bM3BtkvSmIRJeYENdfn1dn5jauBI7BBF+IyyiBS+oSVx3Hz/Gaw==
+  version "7.11.1"
+  resolved "https://registry.yarnpkg.com/cssdb/-/cssdb-7.11.1.tgz#491841b281d337d7e5332e43b282429dd241b377"
+  integrity sha512-F0nEoX/Rv8ENTHsjMPGHd9opdjGfXkgRBafSUGnQKPzGZFB7Lm0BbT10x21TMOCrKLbVsJ0NoCDMk6AfKqw8/A==
 
 cssesc@^3.0.0:
   version "3.0.0"
@@ -1907,9 +1907,9 @@ why-is-node-running@^2.2.2:
     stackback "0.0.2"
 
 yaml@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.4.tgz#53fc1d514be80aabf386dc6001eb29bf3b7523b2"
-  integrity sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.4.0.tgz#2376db1083d157f4b3a452995803dbcf43b08140"
+  integrity sha512-j9iR8g+/t0lArF4V6NE/QCfT+CO7iLqrXAHZbJdo+LfjqP1vR8Fg5bSiaq6Q2lOD1AUEVrEVIgABvBFYojJVYQ==
 
 yocto-queue@^1.0.0:
   version "1.0.0"
